@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>jQuery UI Button - Default functionality</title>
+<link rel="stylesheet" href="themes/jquery-ui.css" />
+<script src="scripts/jquery-1.9.1.js"></script>
+<script src="scripts/jquery-ui.js"></script>
+<script src="scripts/tinymce.min.js"></script>
+<script src='scripts/jquery.kinetic.js'></script>
+<link rel="stylesheet" href="wpLockScreen.css" />
+<script>
+	$(document).ready(function(){
+		$('.lock-image img').height($(window).height());
+		$('.lock-image').draggable({axis:"y",
+			drag: function(event, ui){
+				//
+				if(ui.position.top>0)
+					event.preventDefault();
+				
+			},
+			stop: function(event,ui){
+				if(ui.position.top<= - ($(window).height()/2))
+				{
+					//alert('sliding up');
+					$(".lock-image").hide("slide",{direction:"up"});
+				}
+				else
+				{
+					//trigger the bounce effect
+				}
+			}
+	});
+		$('.lock-image').click(function(){
+			//alert('bouncing');
+			$(".lock-image").effect("slide",{easing:"easeOutBounce", direction:"up",times:3},1000);
+		});
+	
+});
+
+var timer = setInterval(function(){
+	/*if(parseInt($('.lock-image').css('top'),10) <= - ($(window).height()/2) )
+	{
+		$(".lock-image").hide("slide",{direction:"up"});
+		clearInterval(timer);
+	}*/
+	getDateTime();
+
+
+},100);
+
+Date.prototype.today = function(){ 
+	var weekday=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var monthNames = [ "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December" ];
+	return (weekday[this.getDay()]+", "+monthNames[this.getMonth()]+" "+((this.getDate() < 10)?"0":"") + this.getDate()); 
+};
+//For the time now
+Date.prototype.timeNow = function(){
+     return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes();
+};
+var getDateTime = (function(){
+	var newDate = new Date();
+	var time = /*"LastSync: " + newDate.today() + " @ " + */newDate.timeNow();
+	var date = newDate.today();
+	$('.big-time').text(time);
+	$('.big-date').text(date);
+});
+</script>
+</head>
+<body>
+	<div class='lock-image'>
+<img src='images/test.jpg'/>
+<div class="big-time text-display"></div>
+	<div class='big-date text-display'></div>
+	</div>
+</body>
+</html>

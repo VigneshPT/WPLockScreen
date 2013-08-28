@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>WP Lock Screen Mock</title>
+	<link rel="stylesheet" href="themes/jquery-ui.css" />
+	<script src="scripts/jquery-1.9.1.js"></script>
+	<script src="scripts/jquery-ui.js"></script>
+	<script src="scripts/tinymce.min.js"></script>
+	<script src='scripts/jquery.pep.min.js'></script>
+	<script src="scripts/animation.js"></script>
+	<link rel="stylesheet" href="wpLockScreen.css" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,300' rel='stylesheet' type='text/css'>
+	<script>
+
+	var dragStopped = false;
+	var dy = 0;
+	var cancelFollow = false;
+	var screenUnlocked = false;
+
+	$(document).ready(function() {
+		$('.lock-image img').height($(window).height());
+		$('.lock-image').pep({
+			axis: "y",
+			useCSSTranslation: false,
+			cssEaseDuration: 100,
+
+			drag: function() {
+				if (parseInt($('.lock-image').css('top'), 10) > 0) {
+					$('.lock-image').css('top', '0px');
+					return false;
+				}
+				dy = this.dy;
+			},
+			stop: function() {
+				if(this.started){
+					dragStopped = true;
+				}
+				if((parseInt($('.lock-image').css('top'), 10) > -($(window).height() / 2)) && this.started && screenUnlocked== false)
+				{	
+					setTimeout(function(){
+						bounceAfterClickOrStopDrag(-parseInt($('.lock-image').css('top'), 10));
+					},100);
+				}
+				
+			}
+			
+		});
+		
+		var bounceAfterClickOrStopDrag = function(offset)
+		{
+			var localOffset = offset || 100;
+			animate({
+						delay: 20,
+		    			duration: 1000,
+		    			delta: makeEaseOut(bounce),
+		    			step: function(delta) {
+		    			  document.getElementsByClassName('lock-image')[0].style.top = (localOffset*delta -localOffset) + 'px';
+					    }
+					});
+		}
+		$('.lock-image').click(function(event) {
+			
+			if(!dragStopped)
+			{
+				bounceAfterClickOrStopDrag(-parseInt($('.lock-image').css('top'), 10));
+			}
+			event.stopPropagation();
+
+			setTimeout(function(){
+				
+			},2000);
+			
+		});
+
+		$(document).keypress(function(e) {
+			if (e.which == 13) {
+				slideUpFunction(parseInt($('.lock-image').css('top'), 10), 20);
+			}
+		});
+
+	});
+	var slideUpFunction = function(currentTopPosition, speed) {
+		speed = speed>9? speed : 9;
+		var slideTimer = setInterval(function() {
+			currentTopPosition = currentTopPosition - speed;
+			$('.lock-image').css('top', currentTopPosition);
+			if (currentTopPosition <= (-parseInt($('.lock-image img').height(), 10)))
+			{	
+				screenUnlocked = true;
+				clearInterval(slideTimer);
+			}
+		}, 1);
+	}
+
+	var timer = setInterval(function() {
+		if (dragStopped==true ) {
+			//$(".lock-image").hide("slide",{direction:"up"});
+			dragStopped=false;
+			if(parseInt($('.lock-image').css('top'), 10) <= -($(window).height() / 2))
+			{
+				slideUpFunction(parseInt($('.lock-image').css('top'), 10), Math.abs(dy));
+				//clearInterval(timer);
+			}
+		}
+		getDateTime();
+	}, 50);
+
+	Date.prototype.today = function() {
+		var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+		var monthNames = ["January", "February", "March", "April", "May", "June",
+			"July", "August", "September", "October", "November", "December"
+		];
+		return (weekday[this.getDay()] + ", " + monthNames[this.getMonth()] + " " + ((this.getDate() < 10) ? "0" : "") + this.getDate());
+	};
+	//For the time now
+	Date.prototype.timeNow = function() {
+		return ((this.getHours() < 10) ? "0" : "") + this.getHours() + ":" + ((this.getMinutes() < 10) ? "0" : "") + this.getMinutes();
+	};
+
+	var getDateTime = (function() {
+		var newDate = new Date();
+		var time = newDate.timeNow();
+		var date = newDate.today();
+		$('.big-time').text(time);
+		$('.big-date').text(date);
+	});
+</script>
+</head>
+<body>
+	<div class='lock-image'>	
+		<img  src='images/test.jpg'/>
+		<div class="big-time text-display"></div>
+		<div class='big-date text-display'></div>
+		
+	</div>
+	<div class='home-container'>Home Page Content</div>
+</body>
+</html>

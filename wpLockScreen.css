@@ -1,0 +1,45 @@
+.lock-image{
+	position:absolute; 
+	left:0; 
+	top:0;
+	z-index:999999;
+}
+.lock-image img{
+	width:100%;
+}
+.text-display
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-weight:300;
+	cursor:default;
+	position:absolute;
+	color:#fff;
+}
+.big-time{
+	font-size:100px;
+	bottom:200px; 
+	left: 100px; 
+}
+.big-date{
+	font-size:50px;
+	bottom:120px; 
+	left: 100px; 
+	text-indent:8px;
+}
+.notransition {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+  transition: none !important;
+}
+.home-container{
+	font-size: 100px;
+	font-family: 'Open Sans', sans-serif; 
+	font-weight:300;
+	cursor:default;
+	position:absolute;
+	color:#000;
+	width:100%;
+	text-align: center;
+}

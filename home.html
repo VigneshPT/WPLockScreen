@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Comic strip - Home page</title>
+<link rel="stylesheet" href="themes/jquery-ui.css" />
+<script src="scripts/jquery-1.9.1.js"></script>
+<script src="scripts/jquery-ui.js"></script>
+<script src="scripts/tinymce.min.js"></script>
+<link rel="stylesheet" href="home.css" />
+<script>
+var areaClicked = null;
+	$(document).ready(function(){
+	$('.comic-area').resizable();
+	/*$('#chooser').bind('click',handleSelect);*/
+	document.getElementById('chooser').addEventListener('change', handleSelect, false);
+	$('.comic-area').dblclick(function(event){
+
+		areaClicked = event.target;
+		alert(areaClicked.id);
+		$('#chooser').click();
+	});
+	$('.control-panel').draggable();
+
+});
+	var handleSelect = function (evt)
+	{
+		alert(evt.target);
+		var file = evt.target.files[0];
+
+		var reader = new FileReader();
+		reader.onload = (function(theFile) {
+        return function(e) {
+          // Render thumbnail.
+          alert(areaClicked.id);
+          var div = document.getElementById(areaClicked.id);
+          div.style.backgroundImage= "url("+e.target.result+")";
+          div.style.backgroundRepeat = "no-repeat";
+          div.style.backgroundSize = "contain";
+
+          /*var div2 = document.createElement('div');
+          div2.innerHTML = ['<img src="', e.target.result,
+                            '" title="', escape(theFile.name), '" width="'+areaClicked.clientWidth+'"/>'].join('');*/
+          /*document.getElementById('list').insertBefore(span, null);*/
+          areaClicked.appendChild(div2);
+
+        };
+      })(file);
+      reader.readAsDataURL(file);
+	};
+
+</script>
+</head>
+<body>
+	
+<div id='1' class='comic-area round'></div>
+<div id='2' class='comic-area round'></div>
+<div id='3' class='comic-area round'></div>
+<input type='file' id='chooser'/>
+<ul class='control-panel'>
+	<li style='background:#0f0;'></li>
+	<li style='background:#00f;'></li>
+</ul>
+</body>
+</html>
